@@ -214,7 +214,15 @@ function statusBar(context: vscode.ExtensionContext): void {
     vscode.workspace.onDidChangeConfiguration(
       (e) => (e.affectsConfiguration("keybars.statusBar") || e.affectsConfiguration("keybars.command")) && start(),
     ),
-    { dispose: () => (clearTimeout(retry), watcher?.kill()) },
+    {
+      dispose: () => {
+        clearTimeout(retry);
+        // unset first, so its exit doesn't schedule another try
+        const child = watcher;
+        watcher = undefined;
+        child?.kill();
+      },
+    },
   );
   start();
 }
