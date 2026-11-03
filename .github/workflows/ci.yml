@@ -6,14 +6,16 @@ on:
   pull_request:
   workflow_dispatch:
 
+# homelab's job image has Node, so nothing comes from GitHub, whose limit on
+# unauthenticated requests fails runs
 jobs:
   check:
     runs-on: ubuntu-latest
+    container:
+      image: localhost/forgejo-job:1
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
+      - uses: https://code.forgejo.org/actions/checkout@v4
+      - run: node --version
       - run: npm ci
       - run: npm run check
       - run: npm run lint
