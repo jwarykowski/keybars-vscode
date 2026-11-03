@@ -1,0 +1,107 @@
+{
+  "name": "keybars",
+  "displayName": "keybars",
+  "version": "0.1.0",
+  "description": "keybars Pro in VS Code: tasks, errors, the debugger and uncommitted changes on your keyboard, and Focus in the status bar.",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "keybars",
+    "keyboard",
+    "notifications",
+    "rgb"
+  ],
+  "homepage": "https://keybars.app/pro/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://code.warykowski.io/jwarykowski/keybars-vscode"
+  },
+  "publisher": "keybars",
+  "type": "module",
+  "main": "./dist/extension.cjs",
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --platform=node --format=cjs --external:vscode --outfile=dist/extension.cjs --minify",
+    "check": "tsc --noEmit",
+    "lint": "oxlint",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "test": "node --experimental-strip-types --no-warnings --import ./test/register.ts --test 'src/**/*.test.ts'",
+    "package": "npm run build && vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/vscode": "1.90.0",
+    "@vscode/vsce": "^3.2.0",
+    "esbuild": "^0.25.0",
+    "oxfmt": "0.73.0",
+    "oxlint": "1.88.0",
+    "typescript": "^5.9.3"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "keybars.focusStart",
+        "title": "Start Focus",
+        "category": "keybars"
+      },
+      {
+        "command": "keybars.focusStop",
+        "title": "Stop Focus",
+        "category": "keybars"
+      }
+    ],
+    "configuration": {
+      "title": "keybars",
+      "properties": {
+        "keybars.command": {
+          "type": "string",
+          "default": "keybars-pro",
+          "description": "The keybars-pro command, if it isn't on PATH."
+        },
+        "keybars.tasks": {
+          "type": "boolean",
+          "default": true,
+          "description": "Send build.running, then build.passed or build.failed, as tasks run (test.* for test tasks)."
+        },
+        "keybars.errors": {
+          "type": "boolean",
+          "default": true,
+          "description": "Hold a key while the workspace has errors."
+        },
+        "keybars.errorsKey": {
+          "type": "string",
+          "default": "esc",
+          "description": "The key for errors, as keybars-pro light names keys: esc, top-right, r2c1..."
+        },
+        "keybars.errorsColour": {
+          "type": "string",
+          "default": "red",
+          "description": "Its colour: a swatch's name or #rrggbb."
+        },
+        "keybars.debug": {
+          "type": "boolean",
+          "default": true,
+          "description": "Send debug.started, debug.paused, debug.continued and debug.ended."
+        },
+        "keybars.git": {
+          "type": "boolean",
+          "default": true,
+          "description": "Send git.dirty and git.clean when uncommitted changes come and go."
+        },
+        "keybars.statusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the Focus timer and typing speed in the status bar."
+        }
+      }
+    }
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "engines": {
+    "vscode": "^1.90.0"
+  }
+}
